@@ -7,6 +7,8 @@ from .models import RankingList
 from .models import Monthcountall
 from .models import RegionCount
 from .models import EventsReason
+from .models import MonthCountavgm
+from .models import MonthCountavgy
 
 def index(request):
     
@@ -48,5 +50,21 @@ def events_reason(request):
     rl_str = serializers.serialize("json", events_reasoning)
     rl = json.loads(rl_str)
     print(rl)
+
+    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+def month_countavgm(request):
+    month_countavgm = MonthCountavgm.objects.all()
+    rl_str = serializers.serialize("json", month_countavgm)
+    rl = json.loads(rl_str)
+    print(rl)   
+
+    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+def month_countavgy(request):
+    month_countavgy = MonthCountavgy.objects.all()
+    rl_str = serializers.serialize("json", month_countavgy)
+    rl = json.loads(rl_str)
+    print(rl)   
 
     return HttpResponse(json.dumps(rl), content_type='application/json')

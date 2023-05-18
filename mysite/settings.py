@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'mysite.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'events_geo',
+        'NAME': 'ugc_events',
         'USER': 'root',
         'PASSWORD': 'rootuser123',
         'HOST': '127.0.0.1',
