@@ -4,8 +4,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 from .models import RankingList
-from .models import MonthCoutAvgm
-from .models import MonthCoutAvgy
+from .models import MonthCountAvgm
+from .models import MonthCountAvgy
 
 def index(request):
     
@@ -24,18 +24,18 @@ def rank_list(request):
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
-def month_coutAvgm(request):
-    month_coutAvgm = MonthCoutAvgm.objects.all()
-    rl_str = serializers.serialize("json", month_coutAvgm)
+def month_countAvgm(request):
+    month_countAvgm = MonthCountAvgm.objects.all()
+    rl_str = serializers.serialize("json", month_countAvgm)
     rl = json.loads(rl_str)
     print(rl)   
     #[{'model': 'daping.month-coutAvgm', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.month-coutAvgm', 'pk': '道里区', 'fields': {'count': 1}}]
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
-def month_coutAvgy(request):
-    month_coutAvgy = MonthCoutAvgy.objects.all()
-    rl_str = serializers.serialize("json", month_coutAvgy)
+def month_countAvgy(request):
+    month_countAvgy = MonthCountAvgy.objects.all()
+    rl_str = serializers.serialize("json", month_countAvgy)
     rl = json.loads(rl_str)
     print(rl)   
     #[{'model': 'daping.month-coutAvgy', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.month-coutAvgy', 'pk': '道里区', 'fields': {'count': 1}}]

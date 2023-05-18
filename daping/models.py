@@ -138,22 +138,22 @@ class OriginalEvents(models.Model):
         db_table = 'original_events'
 
 class RankingList(models.Model):
-    district = models.CharField(db_column='区域', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
-    count = models.IntegerField(db_column='事故数量', blank=True, null=True)  # Field name made lowercase.
+    district = models.CharField(db_column='district', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
+    count = models.IntegerField(db_column='DistrictCounts', blank=True, null=True)  # Field name made lowercase.
     class Meta:
          managed = False
          db_table = 'ranking_list'
 
 
-class MonthCoutAvgm(models.Model):
-	month = models.IntegerField(db_column='月份', blank=True, primary_key =True)
-	AvgmCounts = models.FloatField(db_column='平均数量', max_length=3, blank=True, null=True)
+class MonthCountAvgm(models.Model):
+	month = models.IntegerField(db_column='month', blank=True, primary_key =True)
+	AvgmCounts = models.FloatField(db_column='AvgmCounts', max_length=3, blank=True, null=True)
 	class Meta:
 		managed = False
-		db_table = 'month_coutAvgm'
+		db_table = 'month_countavgm'
 
-class MonthCoutAvgy(models.Model):
-	Avgycounts = models.FloatField(db_column='平均全年总数', max_length=3, blank=True, primary_key=True)
+class MonthCountAvgy(models.Model):
+	Avgycounts = models.FloatField(db_column='Avgycounts', max_length=3, blank=True, primary_key=True)
 	class Meta:
 		managed = False
-		db_table = 'month_coutAvgy'
+		db_table = 'month_countavgy'

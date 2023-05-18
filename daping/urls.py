@@ -19,13 +19,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('rank_list', views.rank_list, name='rank_list')
-]
-
-urlpatterns = [
-    path('month_coutAvgm', views.month_coutAvgm, name='month_coutAvgm')
-]
-
-urlpatterns = [
-    path('month_coutAvgy', views.month_coutAvgy, name='month_coutAvgy')
+    path('rank_list', views.rank_list, name='rank_list'),
+    path('month_countavgm', views.month_countAvgm, name='month_countavgm'),
+    path('month_countavgy', views.month_countAvgy, name='month_countavgy')
 ]
