@@ -5,6 +5,7 @@ from django.http import HttpResponse
 
 from .models import RankingList
 from .models import Monthcountall
+from .models import Monthcountly
 from .models import RegionCount
 from .models import EventsReason
 
@@ -29,6 +30,15 @@ def rank_list(request):
 def month_countall(request):
     monthcountall = Monthcountall.objects.all()
     rl_str = serializers.serialize("json", monthcountall)
+    rl = json.loads(rl_str)
+    print(rl)   
+    #[{'model': 'daping.rankinglist', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.rankinglist', 'pk': '道里区', 'fields': {'count': 1}}]
+    
+    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+def month_countly(request):
+    monthcountly = Monthcountly.objects.all()
+    rl_str = serializers.serialize("json", monthcountly)
     rl = json.loads(rl_str)
     print(rl)   
     #[{'model': 'daping.rankinglist', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.rankinglist', 'pk': '道里区', 'fields': {'count': 1}}]

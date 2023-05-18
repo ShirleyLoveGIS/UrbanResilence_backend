@@ -21,6 +21,7 @@ from . import views
 urlpatterns = [
     path('rank_list', views.rank_list, name='rank_list'),
     path('month_countall', views.month_countall, name='month_countall'),
-    path('region_count1', views.region_count, name='region_count1'),
+    path('month_countly', views.month_countly, name='month_countly'),
+    path('region_count', views.region_count, name='region_count'),
     path('events_reason', views.events_reason, name='events_reason')
 ]
