@@ -138,9 +138,31 @@ class OriginalEvents(models.Model):
         db_table = 'original_events'
 
 class RankingList(models.Model):
-    district = models.CharField(db_column='District', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
-    count = models.IntegerField(db_column='count', blank=True, null=True)  # Field name made lowercase.
+    district = models.CharField(db_column='district', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
+    DistrictCounts = models.IntegerField(db_column='DistrictCounts', blank=True, null=False)  # Field name made lowercase.
     class Meta:
          managed = False
          db_table = 'ranking_list'
+      
+class Monthcountall(models.Model):
+    month = models.CharField(db_column='month', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
+    AllCounts = models.IntegerField(db_column='AllCounts', blank=True, null=False)  # Field name made lowercase.
+    class Meta:
+         managed = False
+         db_table = 'month_countall'
 
+class RegionCount(models.Model):
+    province = models.CharField(db_column='Province', max_length=10,blank=True, primary_key =True)  # Field name made lowercase.
+    regioncounts = models.IntegerField(db_column='RegionCounts', blank=True, null=True)   # Field name made lowercase.
+
+    class Meta:
+         managed = False
+         db_table = 'region_count'
+
+class EventsReason(models.Model):
+    reason = models.CharField(db_column='Reason', max_length=50, blank=True, null=False, primary_key =True)  # Field name made lowercase.
+    reasoncounts = models.IntegerField(db_column='ReasonCounts', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+         managed = False
+         db_table = 'events_reason'

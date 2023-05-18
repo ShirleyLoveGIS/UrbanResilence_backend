@@ -19,5 +19,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('rank_list', views.rank_list, name='rank_list')
+    path('rank_list', views.rank_list, name='rank_list'),
+    path('month_countall', views.month_countall, name='month_countall'),
+    path('region_count1', views.region_count, name='region_count1'),
+    path('events_reason', views.events_reason, name='events_reason')
 ]
