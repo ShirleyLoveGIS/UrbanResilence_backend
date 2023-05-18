@@ -151,6 +151,14 @@ class Monthcountall(models.Model):
          managed = False
          db_table = 'month_countall'
 
+
+class Monthcountly(models.Model):
+    month = models.CharField(db_column='month', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
+    LyCounts = models.IntegerField(db_column='LyCounts', blank=True, null=False)  # Field name made lowercase.
+    class Meta:
+         managed = False
+         db_table = 'month_countly'         
+
 class RegionCount(models.Model):
     province = models.CharField(db_column='Province', max_length=10,blank=True, primary_key =True)  # Field name made lowercase.
     regioncounts = models.IntegerField(db_column='RegionCounts', blank=True, null=True)   # Field name made lowercase.
