@@ -187,3 +187,13 @@ class MonthCountavgy(models.Model):
 	class Meta:
 		managed = False
 		db_table = 'month_countavgy'
+                
+class MonthCount(models.Model):
+    month = models.IntegerField(db_column='month', blank=True, primary_key =True)
+    AvgyCounts = models.FloatField(db_column='AvgyCounts', max_length=3, blank=True)
+    LyCounts = models.IntegerField(db_column='LyCounts', blank=True, null=False)  # Field name made lowercase.
+    AllCounts = models.IntegerField(db_column='AllCounts', blank=True, null=False)  # Field name made lowercase.
+    AvgmCounts = models.FloatField(db_column='AvgmCounts', max_length=3, blank=True, null=True)
+    class Meta:
+        managed = False
+        db_table = 'month_count'                

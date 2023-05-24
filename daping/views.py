@@ -10,6 +10,7 @@ from .models import RegionCount
 from .models import EventsReason
 from .models import MonthCountavgm
 from .models import MonthCountavgy
+from .models import MonthCount
 
 def index(request):
     
@@ -78,3 +79,37 @@ def month_countavgy(request):
     print(rl)   
 
     return HttpResponse(json.dumps(rl), content_type='application/json')
+
+def month_count(request):
+    month_count = MonthCount.objects.all()
+    rl_str = serializers.serialize("json", month_count)
+    rl = json.loads(rl_str)
+    print(rl)   
+
+    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+def getmonth(request):
+    month_countavgy = MonthCountavgy.objects.all()
+    month_countavgm = MonthCountavgm.objects.all()
+    monthcountly = Monthcountly.objects.all()
+    monthcountall = Monthcountall.objects.all()
+    rl_str = serializers.serialize("json", month_countavgy)
+    rl = json.loads(rl_str)
+    r2_str = serializers.serialize("json", month_countavgm)
+    r2 = json.loads(r2_str)
+    r3_str = serializers.serialize("json", monthcountly)
+    r3 = json.loads(r3_str)
+    r4_str = serializers.serialize("json", monthcountall)
+    r4 = json.loads(r4_str)
+    r5=rl+r2+r3+r4
+    print(r5)   
+    return HttpResponse(json.dumps(r5), content_type='application/json')
+
+
+def myview(_request):
+    response = HttpResponse(json.dumps({"key": "value","key2":"value"}))
+    response["Access-Control-Allow-Origin"] ="*"
+    response["Access-Control-Alow-Methods"] ="POST,GET,OPTIONS"
+    response["Access-Control-Max-Age"] ="1000"
+    response["Access-Control-Allow-Headers"] = "*"
+    return response

@@ -25,6 +25,7 @@ urlpatterns = [
     path('month_countavgy', views.month_countavgy, name='month_countavgy'),
     path('month_countly', views.month_countly, name='month_countly'),
     path('region_count', views.region_count, name='region_count'),
-    path('events_reason', views.events_reason, name='events_reason')
-
+    path('events_reason', views.events_reason, name='events_reason'),
+    path('month_count', views.month_count, name='month_count'),
+    path('getmonth', views.getmonth, name='getmonth')
 ]
