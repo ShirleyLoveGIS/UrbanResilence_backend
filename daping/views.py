@@ -3,6 +3,8 @@ import json
 # Create your views here.
 from django.http import HttpResponse
 from collections import defaultdict
+from itertools import chain
+from django.forms.models import model_to_dict
 
 
 import sys
@@ -100,27 +102,25 @@ def month_countavgy(request):
 def month_count(request):
     month_count = MonthCount.objects.all()
     rl_str = serializers.serialize("json", month_count)
+    print(rl_str)
     rl = json.loads(rl_str)
-    print(rl)   
-
+    print(rl)
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
 def getmonth(request):
-    month_countavgy = MonthCountavgy.objects.all()
-    print(month_countavgm)
-    month_countavgm = MonthCountavgm.objects.all()
+    monthcountavgm = MonthCountavgm.objects.all()
     monthcountly = Monthcountly.objects.all()
     monthcountall = Monthcountall.objects.all()
-    rl_str = serializers.serialize("json", month_countavgy)
-    rl = json.loads(rl_str)
-    r2_str = serializers.serialize("json", month_countavgm)
+    r2_str = serializers.serialize("json", monthcountavgm)
     r2 = json.loads(r2_str)
     r3_str = serializers.serialize("json", monthcountly)
     r3 = json.loads(r3_str)
     r4_str = serializers.serialize("json", monthcountall)
-    r4 = json.loads(r4_str)
+    r4 = json.loads(r4_str)   
+    r5 = r2+r3+r4
 
-    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+    return HttpResponse(json.dumps(r5), content_type='application/json')
 
 
 def myview(_request):
