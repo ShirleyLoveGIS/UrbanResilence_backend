@@ -1,7 +1,12 @@
 from django.shortcuts import render
-
+import json
 # Create your views here.
 from django.http import HttpResponse
+from collections import defaultdict
+
+
+import sys
+print(sys.path)
 
 from .models import RankingList
 from .models import Monthcountall
@@ -19,6 +24,18 @@ def index(request):
 from django.core import serializers
 import json
 from django.http import JsonResponse
+
+def merge_dict(d1, d2):
+    d = defaultdict(list)
+
+    for dd in (d1, d2):
+        for key, value in d.items():
+            if isinstance(value, list):
+                dd[key].extend(value)
+            else:
+                dd[key].append(value)
+    return dict(dd)
+
 
 
 def rank_list(request):
@@ -90,6 +107,7 @@ def month_count(request):
 
 def getmonth(request):
     month_countavgy = MonthCountavgy.objects.all()
+    print(month_countavgm)
     month_countavgm = MonthCountavgm.objects.all()
     monthcountly = Monthcountly.objects.all()
     monthcountall = Monthcountall.objects.all()
@@ -101,9 +119,8 @@ def getmonth(request):
     r3 = json.loads(r3_str)
     r4_str = serializers.serialize("json", monthcountall)
     r4 = json.loads(r4_str)
-    r5=rl+r2+r3+r4
-    print(r5)   
-    return HttpResponse(json.dumps(r5), content_type='application/json')
+
+    return HttpResponse(json.dumps(rl), content_type='application/json')
 
 
 def myview(_request):
