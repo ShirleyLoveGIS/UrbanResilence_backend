@@ -160,7 +160,7 @@ class Monthcountly(models.Model):
          db_table = 'month_countly'         
 
 class RegionCount(models.Model):
-    province = models.CharField(db_column='Province', max_length=10,blank=True, primary_key =True)  # Field name made lowercase.
+    city = models.CharField(db_column='City', max_length=10,blank=True, primary_key =True)  # Field name made lowercase.
     regioncounts = models.IntegerField(db_column='RegionCounts', blank=True, null=True)   # Field name made lowercase.
 
     class Meta:
