@@ -134,12 +134,13 @@ def myview(_request):
     return response
 #等间隔法
 def region_dengjiange(request):
-    adict = {"南通":0,"南京":0,"扬州":0,"无锡":0,"泰州":0,"盐城":0,"徐州":0,"常州":0,"宿迁":0,"淮安":0,"镇江":0,"连云港":0,"苏州":0}
+    adict = {"南通市":0,"南京市":0,"扬州市":0,"无锡市":0,"泰州市":0,"盐城市":0,"徐州市":0,"常州市":0,"宿迁市":0,"淮安市":0,"镇江市":0,"连云港市":0,"苏州市":0}
     region_counting = RegionCount.objects.all()
+
     
     dic = RegionCount.objects.values("city","regioncounts")
     for i in dic:
-        cit = i["city"]
+        cit = i["city"]+"市"
         adict[cit] = i["regioncounts"]
         
     print(adict)
