@@ -8,6 +8,7 @@
 from django.db import models
 
 
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 
@@ -176,11 +177,11 @@ class EventsReason(models.Model):
          db_table = 'events_reason'
 
 class MonthCountavgm(models.Model):
-	month = models.IntegerField(db_column='month', blank=True, primary_key =True)
-	AvgmCounts = models.FloatField(db_column='AvgmCounts', max_length=3, blank=True, null=True)
-	class Meta:
-		managed = False
-		db_table = 'month_countavgm'
+    month = models.IntegerField(db_column='month', blank=True, primary_key =True)
+    AvgmCounts = models.FloatField(db_column='AvgmCounts', max_length=3, blank=True, null=True)
+    class Meta:
+        managed = False
+        db_table = 'month_countavgm'
 
 class MonthCountavgy(models.Model):
 	AvgyCounts = models.FloatField(db_column='AvgyCounts', max_length=3, blank=True, primary_key=True)

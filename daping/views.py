@@ -1,7 +1,16 @@
 from django.shortcuts import render
-
+import json
+import numpy as np
+import math
 # Create your views here.
 from django.http import HttpResponse
+from collections import defaultdict
+from itertools import chain
+from django.forms.models import model_to_dict
+
+
+import sys
+print(sys.path)
 
 from .models import RankingList
 from .models import Monthcountall
@@ -19,6 +28,18 @@ def index(request):
 from django.core import serializers
 import json
 from django.http import JsonResponse
+
+def merge_dict(d1, d2):
+    d = defaultdict(list)
+
+    for dd in (d1, d2):
+        for key, value in d.items():
+            if isinstance(value, list):
+                dd[key].extend(value)
+            else:
+                dd[key].append(value)
+    return dict(dd)
+
 
 
 def rank_list(request):
@@ -49,7 +70,7 @@ def month_countly(request):
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
 def region_count(request):
-    region_counting = RegionCount.objects.all()
+    region_counting = RegionCount.objects.all()             
     rl_str = serializers.serialize("json", region_counting)
     rl = json.loads(rl_str)
     print(rl)
@@ -83,26 +104,24 @@ def month_countavgy(request):
 def month_count(request):
     month_count = MonthCount.objects.all()
     rl_str = serializers.serialize("json", month_count)
+    print(rl_str)
     rl = json.loads(rl_str)
-    print(rl)   
-
+    print(rl)
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
 def getmonth(request):
-    month_countavgy = MonthCountavgy.objects.all()
-    month_countavgm = MonthCountavgm.objects.all()
+    monthcountavgm = MonthCountavgm.objects.all()
     monthcountly = Monthcountly.objects.all()
     monthcountall = Monthcountall.objects.all()
-    rl_str = serializers.serialize("json", month_countavgy)
-    rl = json.loads(rl_str)
-    r2_str = serializers.serialize("json", month_countavgm)
+    r2_str = serializers.serialize("json", monthcountavgm)
     r2 = json.loads(r2_str)
     r3_str = serializers.serialize("json", monthcountly)
     r3 = json.loads(r3_str)
     r4_str = serializers.serialize("json", monthcountall)
-    r4 = json.loads(r4_str)
-    r5=rl+r2+r3+r4
-    print(r5)   
+    r4 = json.loads(r4_str)   
+    r5 = r2+r3+r4
+
+
     return HttpResponse(json.dumps(r5), content_type='application/json')
 
 
@@ -113,3 +132,43 @@ def myview(_request):
     response["Access-Control-Max-Age"] ="1000"
     response["Access-Control-Allow-Headers"] = "*"
     return response
+
+def region_dengjiange(request):
+    adict = {"南通":0,"南京":0,"扬州":0,"无锡":0,"泰州":0,"盐城":0,"徐州":0,"常州":0,"宿迁":0,"淮安":0,"镇江":0,"连云港":0,"苏州":0}
+    region_counting = RegionCount.objects.all()
+    
+    dic = RegionCount.objects.values("city","regioncounts")
+    for i in dic:
+        cit = i["city"]
+        adict[cit] = i["regioncounts"]
+        
+    print(adict)
+    #{'南通': 4, '南京': 11, '扬州': 1, '无锡': 2, '泰州': 2, '盐城': 3, '徐州': 2, '常州': 1, '宿迁': 0, '淮安': 0, '镇江': 0, '连云港': 0, '苏州': 0}
+    
+    #分成五级
+    n = 5
+    #取出字典中值进行排序
+    list= sorted(adict.values())
+    
+#最大值
+    maxi = max(list)
+#最小值
+    mini = min(list)
+#间隔值
+    nn = (maxi-mini) / n
+    
+#分等间隔区间
+    for key,value in adict.items():
+        for x in range(n):
+            ma = mini + nn*(x+1)
+            mi = ma - nn
+#mi-ma
+            if value>=mi and value<ma:
+                adict[key] = (x+1)
+        if value == maxi:
+            adict[key] = n
+            
+    print(adict)
+    dd = json.dumps(adict, ensure_ascii=False)
+    
+    return HttpResponse(dd, content_type='application/json')
