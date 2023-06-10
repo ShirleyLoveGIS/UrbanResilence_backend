@@ -132,7 +132,7 @@ def myview(_request):
     response["Access-Control-Max-Age"] ="1000"
     response["Access-Control-Allow-Headers"] = "*"
     return response
-
+#等间隔法
 def region_dengjiange(request):
     adict = {"南通":0,"南京":0,"扬州":0,"无锡":0,"泰州":0,"盐城":0,"徐州":0,"常州":0,"宿迁":0,"淮安":0,"镇江":0,"连云港":0,"苏州":0}
     region_counting = RegionCount.objects.all()
