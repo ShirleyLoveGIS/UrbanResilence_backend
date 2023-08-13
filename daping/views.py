@@ -2,6 +2,19 @@ from django.shortcuts import render
 import json
 import numpy as np
 import math
+import pandas as pd
+from jenkspy import JenksNaturalBreaks
+from database_connect import df,y_df
+from geodetector1 import (
+    factor_detector, 
+    interaction_detector, 
+    ecological_detector
+)
+from classifymethod import (
+    equal_interval, 
+    quantile, 
+    naturalbreaks
+)
 # Create your views here.
 from django.http import HttpResponse
 from collections import defaultdict
@@ -132,44 +145,60 @@ def myview(_request):
     response["Access-Control-Max-Age"] ="1000"
     response["Access-Control-Allow-Headers"] = "*"
     return response
-#等间隔法
-def region_dengjiange(request):
-    adict = {"南通市":0,"南京市":0,"扬州市":0,"无锡市":0,"泰州市":0,"盐城市":0,"徐州市":0,"常州市":0,"宿迁市":0,"淮安市":0,"镇江市":0,"连云港市":0,"苏州市":0}
-    region_counting = RegionCount.objects.all()
 
-    
-    dic = RegionCount.objects.values("city","regioncounts")
-    for i in dic:
-        cit = i["city"]+"市"
-        adict[cit] = i["regioncounts"]
-        
-    print(adict)
-    #{'南通': 4, '南京': 11, '扬州': 1, '无锡': 2, '泰州': 2, '盐城': 3, '徐州': 2, '常州': 1, '宿迁': 0, '淮安': 0, '镇江': 0, '连云港': 0, '苏州': 0}
-    
-    #分成五级
-    n = 5
-    #取出字典中值进行排序
-    list= sorted(adict.values())
-    
-#最大值
-    maxi = max(list)
-#最小值
-    mini = min(list)
-#间隔值
-    nn = (maxi-mini) / n
-    
-#分等间隔区间
-    for key,value in adict.items():
-        for x in range(n):
-            ma = mini + nn*(x+1)
-            mi = ma - nn
-#mi-ma
-            if value>=mi and value<ma:
-                adict[key] = (x+1)
-        if value == maxi:
-            adict[key] = n
-            
-    print(adict)
-    dd = json.dumps(adict, ensure_ascii=False)
-    
-    return HttpResponse(dd, content_type='application/json')
+
+def region_dengjiange(request):
+    all_df=equal_interval(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    json_data = all_df.to_json(orient='records')
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+
+def region_genweifa(request):
+    all_df=quantile(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    json_data = all_df.to_json(orient='records')
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+ 
+
+def region_ziranfa(request):
+    all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    json_data = all_df.to_json(orient='records')
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+
+def factor_detec(request):
+    all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    result_df=factor_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    json_data = result_df.to_json(orient='records')
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+
+def interaction_detec(request):
+    all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    df1, df2 =interaction_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'], relationship=True)
+    result_df=df1
+    json_data = result_df.to_json(orient='records')
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+
+def interaction_rela(request):
+    all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    df1, df2 =interaction_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'], relationship=True)
+    result_df=df2
+    json_data = result_df.to_json(orient='records')
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+
+def ecological_detec(request):
+    all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    result_df=ecological_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+    json_data = result_df.to_json(orient='records')
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+
