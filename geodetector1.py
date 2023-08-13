@@ -64,8 +64,8 @@ def factor_detector(df, y: str, factors: Sequence):
     out_df = pd.DataFrame(index=["q value", "p value"], columns=factors, dtype="float32")
     N_var = df[y].var(ddof=1)#方差
     N_popu = df.shape[0]#行数
-    N_stra = df[y].unique().shape[0]#Y唯一值行数
     for factor in factors:
+        N_stra = df[factor].unique().shape[0]
         q, lamda_1st_sum, lamda_2nd_sum = cal_q(df, y, factor)
 
         #lamda value
@@ -135,11 +135,9 @@ def ecological_detector(df, y: str, factors: Sequence):
 
     for i in range(1, length):
         ssw1, _, _ = cal_ssw(df, y, factors[i])
-        #####
         dfn = df[factors[i]].notna().sum()-1#非空处和减一
         for j in range(0, i):
             ssw2, _, _ = cal_ssw(df, y, factors[j])
-            #####
             dfd = df[factors[j]].notna().sum()-1
             fval = (dfn*(dfd-1)*ssw1)/(dfd*(dfn-1)*ssw2)
             if fval<f.ppf(0.05, dfn, dfn):
