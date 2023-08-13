@@ -28,5 +28,11 @@ urlpatterns = [
     path('events_reason', views.events_reason, name='events_reason'),
     path('month_count', views.month_count, name='month_count'),
     path('getmonth', views.getmonth, name='getmonth'),
-    path('region_dengjiange', views.region_dengjiange, name='region_dengjiange')
+    path('region_dengjiange', views.region_dengjiange, name='region_dengjiange'),
+    path('region_genweifa', views.region_genweifa, name='region_genweifa'),
+    path('region_ziranfa', views.region_ziranfa, name='region_ziranfa'),
+    path('factor_detec', views.factor_detec, name='factor_detec'),
+    path('interaction_detec', views.interaction_detec, name='interaction_detec'),
+    path('interaction_rela', views.interaction_rela, name='interaction_rela'),
+    path('ecological_detec', views.ecological_detec, name='ecological_detec')
 ]
