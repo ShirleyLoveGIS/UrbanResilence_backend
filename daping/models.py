@@ -201,14 +201,14 @@ class MonthCount(models.Model):
 
 class Factor(models.Model):       
     Y = models.IntegerField(db_column='Y', blank=True, null=True)
-    name = models.IntegerField(db_column='name', max_length=50 , blank=True, null=True)
-    roaddensity = models.IntegerField(db_column='roaddensity', blank=True, null=True)
-    popudensity = models.IntegerField(db_column='popudensity', blank=True, null=True)
-    clusterdegree = models.IntegerField(db_column='clusterdegree', blank=True, null=True)
-    elevationmean = models.IntegerField(db_column='elevationmean', blank=True, null=True)
-    elevationstandard = models.IntegerField(db_column='elevationstandard', blank=True, null=True)
-    soilmiscibility = models.IntegerField(db_column='soilmiscibility', blank=True, null=True)
-    maxiareapropo = models.IntegerField(db_column='maxiareapropo', blank=True, null=True)
+    name = models.CharField(db_column='name', max_length=50 , blank=True, null=True)
+    roaddensity = models.FloatField(db_column='roaddensity', blank=True, null=True)
+    popudensity = models.FloatField(db_column='popudensity', blank=True, null=True)
+    clusterdegree = models.FloatField(db_column='clusterdegree', blank=True, null=True)
+    elevationmean = models.FloatField(db_column='elevationmean', blank=True, null=True)
+    elevationstandard = models.FloatField(db_column='elevationstandard', blank=True, null=True)
+    soilmiscibility = models.FloatField(db_column='soilmiscibility', blank=True, null=True)
+    maxiareapropo = models.FloatField(db_column='maxiareapropo', blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'factor' 
