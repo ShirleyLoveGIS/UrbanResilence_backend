@@ -3,8 +3,6 @@ import json
 import numpy as np
 import math
 import pandas as pd
-from jenkspy import JenksNaturalBreaks
-from database_connect import df,y_df
 from geodetector1 import (
     factor_detector, 
     interaction_detector, 
@@ -33,6 +31,7 @@ from .models import EventsReason
 from .models import MonthCountavgm
 from .models import MonthCountavgy
 from .models import MonthCount
+from .models import Factor
 
 def index(request):
     
@@ -52,8 +51,6 @@ def merge_dict(d1, d2):
             else:
                 dd[key].append(value)
     return dict(dd)
-
-
 
 def rank_list(request):
     ranking_list = RankingList.objects.all()
@@ -81,6 +78,7 @@ def month_countly(request):
     #[{'model': 'daping.rankinglist', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.rankinglist', 'pk': '道里区', 'fields': {'count': 1}}]
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
+
 
 def region_count(request):
     region_counting = RegionCount.objects.all()             
@@ -122,6 +120,8 @@ def month_count(request):
     print(rl)
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
+
+
 def getmonth(request):
     monthcountavgm = MonthCountavgm.objects.all()
     monthcountly = Monthcountly.objects.all()
@@ -148,56 +148,70 @@ def myview(_request):
 
 
 def region_dengjiange(request):
-    all_df=equal_interval(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
-    json_data = all_df.to_json(orient='records')
-
-    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
+    all_df=equal_interval(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])    
+    json_str = all_df.to_json(orient='records')
+    json_data = json.loads(json_str)
+    
+    return HttpResponse(json.dumps(json_data), content_type='application/json')
 
 
 def region_genweifa(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     all_df=quantile(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
-    json_data = all_df.to_json(orient='records')
+    json_str = all_df.to_json(orient='records')
+    json_data = json.loads(json_str)
 
-    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+    return HttpResponse(json.dumps(json_data), content_type='application/json')
  
 
 def region_ziranfa(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
-    json_data = all_df.to_json(orient='records')
+    json_str = all_df.to_json(orient='records')
+    json_data = json.loads(json_str)
 
-    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+    return HttpResponse(json.dumps(json_data), content_type='application/json')
 
 
 def factor_detec(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
     result_df=factor_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
-    json_data = result_df.to_json(orient='records')
+    json_str = result_df.to_json(orient='records')
+    json_data = json.loads(json_str)
 
-    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+    return HttpResponse(json.dumps(json_data), content_type='application/json')
 
 
 def interaction_detec(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
     df1, df2 =interaction_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'], relationship=True)
     result_df=df1
-    json_data = result_df.to_json(orient='records')
+    json_str = result_df.to_json(orient='records')
+    json_data = json.loads(json_str)
 
     return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
 
 
 def interaction_rela(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
     df1, df2 =interaction_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'], relationship=True)
     result_df=df2
-    json_data = result_df.to_json(orient='records')
+    json_str = result_df.to_json(orient='records')
+    json_data = json.loads(json_str)
 
     return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
 
 
 def ecological_detec(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
     result_df=ecological_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
-    json_data = result_df.to_json(orient='records')
+    json_str = result_df.to_json(orient='records')
+    json_data = json.loads(json_str)
 
     return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
 
