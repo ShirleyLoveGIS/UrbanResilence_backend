@@ -12,9 +12,10 @@ conn = pymysql.connect(
 #读取数据
 df = pd.read_sql('select * from factor',con=conn)
 #建立y_dataframe
-y_df = pd.DataFrame(index=range(df.shape[0]) , columns=['Y'], dtype="float32")
+y_df = pd.DataFrame(index=range(df.shape[0]) , columns=['Y','name'], dtype="float32")
 #填入数据
 for i in range(0, df.shape[0]):
     y_df.loc[i, ['Y']]= df.iat[i,list(df).index('Y')]   
+    y_df.loc[i, ['name']]= df.iat[i,list(df).index('name')]
 
 
