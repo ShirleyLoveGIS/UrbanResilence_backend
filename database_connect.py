@@ -1,3 +1,4 @@
+
 import pymysql
 import pandas as pd
 
@@ -13,6 +14,7 @@ conn = pymysql.connect(
 df = pd.read_sql('select * from factor',con=conn)
 #建立y_dataframe
 y_df = pd.DataFrame(index=range(df.shape[0]) , columns=['Y'], dtype="float32")
+print(y_df)
 #填入数据
 for i in range(0, df.shape[0]):
     y_df.loc[i, ['Y']]= df.iat[i,list(df).index('Y')]   
