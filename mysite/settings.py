@@ -46,6 +46,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -143,7 +144,9 @@ CORS_ORIGIN_WHITELIST = (
  'http://127.0.0.1:5500',
  'http://127.0.0.1:5501',
   'http://127.0.0.1:5502',
-  'https://echarts.apache.org'
+  'https://echarts.apache.org',
+    'http://127.0.0.1:5503'
+
 
  
  # 凡是出现在白名单中的域名，都可以访问后端接口

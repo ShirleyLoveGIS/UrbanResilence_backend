@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 import json
 import numpy as np
 import math
@@ -214,5 +215,12 @@ def ecological_detec(request):
     json_data = json.loads(json_str)
 
     return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+@csrf_exempt
+def post(request):
+    data = json.loads(request.body)
+
+    return HttpResponse(json.dumps(data),content_type="application/json")
+
 
 
