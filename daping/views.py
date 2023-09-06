@@ -32,6 +32,7 @@ from .models import MonthCountavgm
 from .models import MonthCountavgy
 from .models import MonthCount
 from .models import Factor
+from .models import OriginalEvents
 
 def index(request):
     
@@ -214,5 +215,16 @@ def ecological_detec(request):
     json_data = json.loads(json_str)
 
     return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
+
+
+def original_events(request):
+    original_events = OriginalEvents.objects.all()
+    rl_str = serializers.serialize("json", original_events)
+    print(rl_str)
+    rl = json.loads(rl_str)
+    print(rl)
+    #{"model": "daping.originalevents", "pk": 1, "fields": {"index": 1, "province": "江苏", "city": "常州", "district": "武进区", "casualty": 4, "reason": "建设工程", "link": "https://m.163.com/dy/article/E0H6T7K90521AS1H.html", "address": "武进区湖塘镇马杭东新村委郭家村一污水管网施工工地", "longitude": "119.9968", "latitude": "31.698351"}}
+
+    return HttpResponse(json.dumps(rl), content_type='application/json')
 
 
