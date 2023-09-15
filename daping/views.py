@@ -33,6 +33,7 @@ from .models import MonthCountavgy
 from .models import MonthCount
 from .models import Factor
 from .models import OriginalEvents
+from .models import RiskValue
 
 def index(request):
     
@@ -227,4 +228,12 @@ def original_events(request):
 
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
+def risk_value(request):
+    risk_value = RiskValue.objects.all()
+    rl_str = serializers.serialize("json", risk_value)
+    print(rl_str)
+    rl = json.loads(rl_str)
+    print(rl)
+    
+    return HttpResponse(json.dumps(rl), content_type='application/json')
 
