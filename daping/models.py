@@ -215,3 +215,11 @@ class Factor(models.Model):
     class Meta:
         managed = False
         db_table = 'factor' 
+
+class RiskValue(models.Model):       
+    city = models.CharField(db_column='city', max_length=50 , blank=True, primary_key=True)
+    riskvalue = models.FloatField(db_column='riskvalue', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'risk_value' 
