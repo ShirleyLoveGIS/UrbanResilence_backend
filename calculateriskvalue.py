@@ -47,9 +47,10 @@ def calriskvalue(front):
         #计算风险值
         risk_value = 0
         for i in range(0,len(front)):
-            risk_value += result_df.iloc[0][i]*weight[i]
+            risk_value += result_df.iloc[0][i]*weight[i]*0.01
         city_df.loc[j, ['city']]= city[j]
-        city_df.loc[j, ['riskvalue']]= risk_value  
+        city_df.loc[j, ['riskvalue']]= risk_value 
+        print(risk_value) 
     #将DataFrame数据插入表中
     engine = create_engine('mysql+mysqldb://root:rootuser123@localhost/ugc_events')
     city_df.to_sql('risk_value', engine, index=False, if_exists="replace")
