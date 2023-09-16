@@ -145,7 +145,8 @@ CORS_ORIGIN_WHITELIST = (
  'http://127.0.0.1:5501',
   'http://127.0.0.1:5502',
   'https://echarts.apache.org',
-    'http://127.0.0.1:5503'
+    'http://127.0.0.1:5503',
+    'http://127.0.0.1:5505'
 
 
  

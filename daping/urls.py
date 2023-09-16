@@ -35,5 +35,8 @@ urlpatterns = [
     path('interaction_detec', views.interaction_detec, name='interaction_detec'),
     path('interaction_rela', views.interaction_rela, name='interaction_rela'),
     path('ecological_detec', views.ecological_detec, name='ecological_detec'),
+    path('original_events', views.original_events, name='original_events'),
+    path('risk_value', views.risk_value, name='risk_value')
+,
     path('post', views.post, name='post')
 ]
