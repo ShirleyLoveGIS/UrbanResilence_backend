@@ -3,11 +3,30 @@ import math
 import pandas as pd
 from jenkspy import JenksNaturalBreaks
 from database_connect import df,y_df
+import pymysql
+
+conn = pymysql.connect(
+	user='root',
+	password='rootuser123',
+	port=3306,
+	database='ugc_events',
+	host='localhost',
+)
 
 #等间隔法分类
 def equal_interval(df, n:int , factors):
     #行数
     ylength = df.shape[0]
+
+    #读取数据
+    factor_df = pd.read_sql('select * from factor',con=conn)
+    #建立y_dataframe
+    y_df1 = pd.DataFrame(index=range(ylength) , columns=['Y','name'], dtype="float32")
+    #填入数据
+    for i in range(0, df.shape[0]):
+        y_df1.loc[i, ['Y']]= factor_df.iat[i,list(factor_df).index('Y')]   
+        y_df1.loc[i, ['name']]= factor_df.iat[i,list(factor_df).index('name')]
+
     #建立dataframe
     out_df = pd.DataFrame(index=range(ylength), columns=factors, dtype="float32")
     #列数
@@ -15,10 +34,10 @@ def equal_interval(df, n:int , factors):
 
     for j in range(0, length):
         #取出值
-        list= []
+        list1= []
         for value in df[factors[j]].to_list():
-            list.append(value)
-        a = np.array(list)
+            list1.append(value)
+        a = np.array(list1)
          
         #最大值
         maxi=max(a)
@@ -35,19 +54,29 @@ def equal_interval(df, n:int , factors):
         #改变值
         for i in range(0, ylength):
             for k in range(n):  
-                if list[i]>=interval[k] and list[i]<interval[k+1]:
+                if list1[i]>=interval[k] and list1[i]<interval[k+1]:
                     out_df.loc[i, factors[j]]= k+1
                     break
             if k==n-1:
                 out_df.loc[i, factors[j]]= 5 
     #合并
-    all_df = pd.concat([y_df,out_df],axis = 1)  
+    all_df = pd.concat([y_df1,out_df],axis = 1)  
     return all_df
 
 #分位法处理数据
 def quantile(df, n:int , factors):
     #行数
     ylength = df.shape[0]
+
+    #读取数据
+    factor_df = pd.read_sql('select * from factor',con=conn)
+    #建立y_dataframe
+    y_df1 = pd.DataFrame(index=range(ylength) , columns=['Y','name'], dtype="float32")
+    #填入数据
+    for i in range(0, df.shape[0]):
+        y_df1.loc[i, ['Y']]= factor_df.iat[i,list(factor_df).index('Y')]   
+        y_df1.loc[i, ['name']]= factor_df.iat[i,list(factor_df).index('name')]
+
     #建立dataframe
     out_df = pd.DataFrame(index=range(ylength), columns=factors, dtype="float32")
     #列数
@@ -55,10 +84,10 @@ def quantile(df, n:int , factors):
 
     for j in range(0, length):
         #取出值
-        list= []
+        list1= []
         for value in df[factors[j]].to_list():
-            list.append(value)
-        a = np.array(list)
+            list1.append(value)
+        a = np.array(list1)
         #最大值
         maxi=max(a)
         #按数值排序
@@ -71,22 +100,31 @@ def quantile(df, n:int , factors):
             rs.append(one_list)
             interval.append(rs[i][0])
         interval.append(maxi)
-        
-        #改变值
         for i in range(0, ylength):
             for k in range(n):  
-                if list[i]>=interval[k] and list[i]<interval[k+1]:
+                if list1[i]>=interval[k] and list1[i]<interval[k+1]:
                     out_df.loc[i, factors[j]]= k+1
                     break
             if k==n-1:
                 out_df.loc[i, factors[j]]= 5 
     #合并
-    all_df = pd.concat([y_df,out_df],axis = 1)  
+    all_df = pd.concat([y_df1,out_df],axis = 1)  
     return all_df
 
+#自然法处理数据
 def naturalbreaks(df, n:int , factors):
     #行数
     ylength = df.shape[0]
+
+    #读取数据
+    factor_df = pd.read_sql('select * from factor',con=conn)
+    #建立y_dataframe
+    y_df1 = pd.DataFrame(index=range(ylength) , columns=['Y','name'], dtype="float32")
+    #填入数据
+    for i in range(0, df.shape[0]):
+        y_df1.loc[i, ['Y']]= factor_df.iat[i,list(factor_df).index('Y')]   
+        y_df1.loc[i, ['name']]= factor_df.iat[i,list(factor_df).index('name')]
+
     #建立dataframe
     out_df = pd.DataFrame(index=range(ylength), columns=factors, dtype="float32")
     #列数
@@ -94,10 +132,10 @@ def naturalbreaks(df, n:int , factors):
 
     for j in range(0, length):
         #取出值
-        list= []
+        list1= []
         for value in df[factors[j]].to_list():
-            list.append(value)
-        a = np.array(list)
+            list1.append(value)
+        a = np.array(list1)
         #分n类
         jnb = JenksNaturalBreaks(n)
         #根据a值进行分类
@@ -107,13 +145,12 @@ def naturalbreaks(df, n:int , factors):
         #改变值
         for i in range(0, ylength):
             for k in range(n):  
-                if list[i]>=interval[k] and list[i]<interval[k+1]:
+                if list1[i]>=interval[k] and list1[i]<interval[k+1]:
                     out_df.loc[i, factors[j]]= k+1
                     break
             if k==n-1:
                 out_df.loc[i, factors[j]]= 5 
     #合并
-    all_df = pd.concat([y_df,out_df],axis = 1)  
+    all_df = pd.concat([y_df1,out_df],axis = 1)  
     return all_df 
-
 

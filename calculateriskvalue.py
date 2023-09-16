@@ -23,10 +23,10 @@ def calriskvalue(front):
     #front=[{"id":"10001","factor name":"roaddensity","factor kind":"X","weight":"20"},{"id":"10002","factor name":"popudensity","factor kind":"X","weight":"20"},{"id":"10003","factor name":"clusterdegree","factor kind":"X","weight":"20"},{"id":"10004","factor name":"elevationmean","factor kind":"X","weight":"20"},{"id":"10005","factor name":"elevationstandard","factor kind":"X","weight":"20"},{"id":"10006","factor name":"soilmiscibility","factor kind":"X","weight":"0"},{"id":"10007","factor name":"maxiareapropo","factor kind":"X","weight":"0"}]
         
     #前台获得权重数组
+    weight = []
     for i in range(0,len(front)):
-        weight = []
         weight.append(int(front[i]['weight']))
-
+    print(weight)
     #获取城市名称数组
     city = []
     city_df = pd.read_sql('select city from factor group by city',con=conn)
