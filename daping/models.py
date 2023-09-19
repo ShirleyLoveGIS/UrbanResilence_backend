@@ -6,6 +6,7 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from datetime import datetime
 
 
 
@@ -125,14 +126,16 @@ class DjangoSession(models.Model):
 
 class OriginalEvents(models.Model):
     index = models.IntegerField(db_column='ID')  # Field name made lowercase.
-    newst = models.DateTimeField(db_column='NewsT')  # Field name made lowercase.
+    # newst = models.DateTimeField(db_column='NewsT')  # Field name made lowercase.
     province = models.CharField(db_column='Province', max_length=10)  # Field name made lowercase.
     city = models.CharField(db_column='City', max_length=10, blank=True, null=True)  # Field name made lowercase.
     district = models.CharField(db_column='District', max_length=10, blank=True, null=True)  # Field name made lowercase.
     casualty = models.IntegerField(db_column='Casualty', blank=True, null=True)  # Field name made lowercase.
     reason = models.CharField(db_column='Reason', max_length=20, blank=True, null=True)  # Field name made lowercase.
     link = models.CharField(db_column='Link', max_length=150, blank=True, null=True)  # Field name made lowercase.
-    address = models.CharField(db_column='Address', max_length=20, blank=True, null=True)  # Field name made lowercase.
+    address = models.CharField(db_column='Address', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    longitude = models.CharField(db_column='Longitude', max_length=150, blank=True)  # Field name made lowercase.
+    latitude = models.CharField(db_column='Latitude', max_length=150, blank=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -200,7 +203,7 @@ class MonthCount(models.Model):
         db_table = 'month_count'  
 
 class Factor(models.Model):       
-    Y = models.IntegerField(db_column='Y', blank=True, null=True)
+    Y = models.FloatField(db_column='Y', blank=True, null=True)
     name = models.CharField(db_column='name', max_length=50 , blank=True, null=True)
     roaddensity = models.FloatField(db_column='roaddensity', blank=True, null=True)
     popudensity = models.FloatField(db_column='popudensity', blank=True, null=True)
@@ -212,3 +215,11 @@ class Factor(models.Model):
     class Meta:
         managed = False
         db_table = 'factor' 
+
+class RiskValue(models.Model):       
+    city = models.CharField(db_column='city', max_length=50 , blank=True, primary_key=True)
+    riskvalue = models.FloatField(db_column='riskvalue', blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'risk_value' 
