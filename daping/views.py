@@ -219,14 +219,14 @@ def ecological_detec(request):
 
     return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
 
-# @csrf_exempt
-# def post(request):
-#     data = json.loads(request.body)
-#     print(data.id)
-#     calriskvalue(data);
+@csrf_exempt
+def post(request):
+    data = json.loads(request.body)
+    print(data.id)
+    calriskvalue(data);
 
 
-#     return HttpResponse(json.dumps(data),content_type="application/json")
+    return HttpResponse(json.dumps(data),content_type="application/json")
 
 @csrf_exempt
 def post2(request):
