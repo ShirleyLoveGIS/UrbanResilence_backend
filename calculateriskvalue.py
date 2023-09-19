@@ -23,10 +23,10 @@ def calriskvalue(front):
     #front=[{"id":"10001","factor name":"roaddensity","factor kind":"X","weight":"20"},{"id":"10002","factor name":"popudensity","factor kind":"X","weight":"20"},{"id":"10003","factor name":"clusterdegree","factor kind":"X","weight":"20"},{"id":"10004","factor name":"elevationmean","factor kind":"X","weight":"20"},{"id":"10005","factor name":"elevationstandard","factor kind":"X","weight":"20"},{"id":"10006","factor name":"soilmiscibility","factor kind":"X","weight":"0"},{"id":"10007","factor name":"maxiareapropo","factor kind":"X","weight":"0"}]
         
     #前台获得权重数组
+    weight = []
     for i in range(0,len(front)):
-        weight = []
         weight.append(int(front[i]['weight']))
-
+    print(weight)
     #获取城市名称数组
     city = []
     city_df = pd.read_sql('select city from factor group by city',con=conn)
@@ -47,9 +47,10 @@ def calriskvalue(front):
         #计算风险值
         risk_value = 0
         for i in range(0,len(front)):
-            risk_value += result_df.iloc[0][i]*weight[i]
+            risk_value += result_df.iloc[0][i]*weight[i]*0.01
         city_df.loc[j, ['city']]= city[j]
-        city_df.loc[j, ['riskvalue']]= risk_value  
+        city_df.loc[j, ['riskvalue']]= risk_value 
+        print(risk_value) 
     #将DataFrame数据插入表中
     engine = create_engine('mysql+mysqldb://root:rootuser123@localhost/ugc_events')
     city_df.to_sql('risk_value', engine, index=False, if_exists="replace")

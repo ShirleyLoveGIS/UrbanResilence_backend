@@ -38,6 +38,6 @@ urlpatterns = [
     path('original_events', views.original_events, name='original_events'),
     path('risk_value', views.risk_value, name='risk_value')
 ,
-    # path('post', views.post, name='post'),
+    path('post', views.post, name='post'),
     path('post2', views.post2, name='post2')
 ]
