@@ -31,7 +31,6 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'corsheaders',
     'daping.apps.DapingConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -46,11 +47,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    
-    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'mysite.urls'
@@ -136,21 +137,21 @@ STATICFILES_DIRS = [(os.path.join(BASE_DIR,'static'))]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# 添加 CORS 配置
-# 1. 设置白名单
+# 添加 django-cors-headers 的白名单, 使白名单中的 host 可以进行跨域请求
 CORS_ORIGIN_WHITELIST = (
- 'http://127.0.0.1:8000',
- 'http://127.0.0.1:5500',
- 'http://127.0.0.1:5501',
-  'http://127.0.0.1:5502',
-  'https://echarts.apache.org',
-    'http://127.0.0.1:5503',
-    'http://127.0.0.1:5505'
+    # 白名单:
+    'http://127.0.0.1:8080',
+    'http://localhost:8080',
 
+    'http://127.0.0.1:8081',
+    'http://localhost:8081',
 
- 
- # 凡是出现在白名单中的域名，都可以访问后端接口
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    
+    # 添加白名单
+    'http://127.0.0.1:5500',
+
 )
-# 2. 设置 CORS Cookie
-CORS_ALLOW_CREDENTIALS = True # 指明在跨域访问中，后端是否支持对cookie的操作
+
+CORS_ALLOW_CREDENTIALS = True
