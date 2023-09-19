@@ -248,3 +248,22 @@ def risk_value(request):
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
+@csrf_exempt
+def post2(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
+    data = json.loads(request.body)
+    # data = [{'id': 10001, 'name': 'roaddensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10002, 'name': 'popudensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10003, 'name': 'clusterdegree', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10004, 'name': 'elevationmean', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10005, 'name': 'elevationstandard', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10006, 'name': 'soilmiscibility', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10007, 'name': 'maxiareapropo', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10008, 'name': 'Y', 'check': True, 'kind': 'x', 'Y': 0}]   
+    x=[]
+    for i in data:
+        if(i['kind'] == 'y'):
+            y=i['name']
+        elif(i['kind'] == 'x'):
+            x.append(i['name'])
+
+    all_df = naturalbreaks(df , 5 , x)
+    df1, df2 = interaction_detector(all_df, y, x, relationship=True)
+    result_df = df1
+    json_str = result_df.to_json(orient='records')
+    json_data = json.loads(json_str)
+
+    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
