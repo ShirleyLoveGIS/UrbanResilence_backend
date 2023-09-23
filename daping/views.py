@@ -232,25 +232,41 @@ def ecological_detec(request):
 def post2(request):
     df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     data = json.loads(request.body)
-    print(data.id)
-    calriskvalue(data);
+    #data=[[{'id': 10001, 'name': 'roaddensity', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10002, 'name': 'popudensity', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10003, 'name': 'clusterdegree', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10004, 'name': 'elevationmean', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10005, 'name': 'elevationstandard', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10006, 'name': 'soilmiscibility', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10007, 'name': 'maxiareapropo', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10008, 'name': 'Y', 'check': True, 'kind': 'y', 'Y': 0}],[{'function': 'equal_interval'}, {'function': 'equal_interval'}],[{'hvalue': 5}, {'hvalue': 5}]]
 
-    # data = [{'id': 10001, 'name': 'roaddensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10002, 'name': 'popudensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10003, 'name': 'clusterdegree', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10004, 'name': 'elevationmean', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10005, 'name': 'elevationstandard', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10006, 'name': 'soilmiscibility', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10007, 'name': 'maxiareapropo', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10008, 'name': 'Y', 'check': True, 'kind': 'x', 'Y': 0}]   
     x=[]
-    for i in data:
+    method = data[1][0]['function']
+    classifiaction = data[2][0]['hvalue']
+    for i in data[0]:
         if(i['kind'] == 'y'):
             y=i['name']
         elif(i['kind'] == 'x'):
             x.append(i['name'])
+    
+    if(method == "equal_interval"):
+        all_df = equal_interval(df , classifiaction , x)
+    elif(method == "quantile"):
+        all_df = quantile(df , classifiaction , x)
+    elif(method == "naturalbreaks"):
+        all_df = naturalbreaks(df , classifiaction , x)
 
-    all_df = naturalbreaks(df , 5 , x)
     df1, df2 = interaction_detector(all_df, y, x, relationship=True)
-    result_df = df1
-    json_str = result_df.to_json(orient='records')
-    json_data = json.loads(json_str)
+    result_df1 = df1
+    result_df2 = df2
+    result_df3=factor_detector(all_df, y, x)
+    result_df4=ecological_detector(all_df, y, x)
+    r1_str = result_df1.to_json(orient='records')
+    r1 = json.loads(r1_str)
+    r2_str = result_df2.to_json(orient='records')
+    r2 = json.loads(r2_str)
+    r3_str = result_df3.to_json(orient='records')
+    r3 = json.loads(r3_str)
+    r4_str = result_df4.to_json(orient='records')
+    r4 = json.loads(r4_str)
+    #r1交互探测器，r2交互关系，r3因子探测器，r4生态探测器
+    r5=r1+r2+r3+r4
 
-    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
-
+    return HttpResponse(json.dumps(r5, ensure_ascii=False), content_type='application/json')
 
 @csrf_exempt
 def post2(request):
