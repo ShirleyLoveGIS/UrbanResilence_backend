@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
-from calculateriskvalue import calriskvalue
 import numpy as np
 import math
 import pandas as pd
@@ -36,6 +35,7 @@ from .models import MonthCount
 from .models import Factor
 from .models import OriginalEvents
 from .models import RiskValue
+from .models import NewsList
 
 def index(request):
     
@@ -268,26 +268,6 @@ def post2(request):
 
     return HttpResponse(json.dumps(r5, ensure_ascii=False), content_type='application/json')
 
-@csrf_exempt
-def post2(request):
-    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
-    data = json.loads(request.body)
-    # data = [{'id': 10001, 'name': 'roaddensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10002, 'name': 'popudensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10003, 'name': 'clusterdegree', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10004, 'name': 'elevationmean', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10005, 'name': 'elevationstandard', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10006, 'name': 'soilmiscibility', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10007, 'name': 'maxiareapropo', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10008, 'name': 'Y', 'check': True, 'kind': 'x', 'Y': 0}]   
-    x=[]
-    for i in data:
-        if(i['kind'] == 'y'):
-            y=i['name']
-        elif(i['kind'] == 'x'):
-            x.append(i['name'])
-
-    all_df = naturalbreaks(df , 5 , x)
-    df1, df2 = interaction_detector(all_df, y, x, relationship=True)
-    result_df = df1
-    json_str = result_df.to_json(orient='records')
-    json_data = json.loads(json_str)
-
-    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
-
 
 
 def original_events(request):
@@ -309,3 +289,11 @@ def risk_value(request):
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
+def news_list(request):
+    news_list = NewsList.objects.all()
+    rl_str = serializers.serialize("json", news_list)
+    print(rl_str)
+    rl = json.loads(rl_str)
+    print(rl)
+    
+    return HttpResponse(json.dumps(rl), content_type='application/json')
