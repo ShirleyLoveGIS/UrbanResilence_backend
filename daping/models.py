@@ -223,3 +223,13 @@ class RiskValue(models.Model):
     class Meta:
         managed = False
         db_table = 'risk_value' 
+
+class NewsList(models.Model):       
+    newsdate = models.CharField(db_column='NewsDate', max_length=50 , blank=True)
+    city = models.CharField(db_column='City', max_length=10 , blank=True, null=True)
+    district = models.CharField(db_column='District', max_length=10 , blank=True, null=True)
+    address = models.CharField(db_column='Address', max_length=50 , blank=True,  primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'news_list' 
