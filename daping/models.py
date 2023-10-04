@@ -140,17 +140,7 @@ class OriginalEvents(models.Model):
     class Meta:
         managed = False
         db_table = 'original_events'
-
-class NewsList(models.Model):
-    newsdate = models.CharField(db_column='NewsDate',primary_key=True, max_length=10, blank=True, null=True)  # Field name made lowercase.
-    city = models.CharField(db_column='City', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    district = models.CharField(db_column='District', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    address = models.CharField(db_column='Address', max_length=50, blank=True, null=True)  # Field name made lowercase.
-   
-
-    class Meta:
-        managed = False
-        db_table = 'news_list'        
+ 
 
 class RankingList(models.Model):
     district = models.CharField(db_column='district', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
