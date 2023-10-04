@@ -14,6 +14,7 @@ from classifymethod import (
     quantile, 
     naturalbreaks
 )
+from calculateriskvalue import calriskvalue
 # Create your views here.
 from django.http import HttpResponse
 from collections import defaultdict
@@ -25,12 +26,9 @@ import sys
 print(sys.path)
 
 from .models import RankingList
-from .models import RankingList2
-from .models import RankingList3
 from .models import Monthcountall
 from .models import Monthcountly
 from .models import RegionCount
-from .models import RegionCount2
 from .models import EventsReason
 from .models import MonthCountavgm
 from .models import MonthCountavgy
@@ -39,7 +37,6 @@ from .models import Factor
 from .models import OriginalEvents
 from .models import RiskValue
 from .models import NewsList
-
 
 def index(request):
     
@@ -69,26 +66,6 @@ def rank_list(request):
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
-
-
-def rank_list2(request):
-    ranking_list2 = RankingList2.objects.all()
-    rl_str = serializers.serialize("json", ranking_list2)
-    rl = json.loads(rl_str)
-    print(rl)   
-    #[{'model': 'daping.rankinglist', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.rankinglist', 'pk': '道里区', 'fields': {'count': 1}}]
-    
-    return HttpResponse(json.dumps(rl), content_type='application/json')
-
-def rank_list3(request):
-    ranking_list3 = RankingList3.objects.all()
-    rl_str = serializers.serialize("json", ranking_list3)
-    rl = json.loads(rl_str)
-    print(rl)   
-    #[{'model': 'daping.rankinglist', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.rankinglist', 'pk': '道里区', 'fields': {'count': 1}}]
-    
-    return HttpResponse(json.dumps(rl), content_type='application/json')
-
 def month_countall(request):
     monthcountall = Monthcountall.objects.all()
     rl_str = serializers.serialize("json", monthcountall)
@@ -110,14 +87,6 @@ def month_countly(request):
 
 def region_count(request):
     region_counting = RegionCount.objects.all()             
-    rl_str = serializers.serialize("json", region_counting)
-    rl = json.loads(rl_str)
-    print(rl)
-
-    return HttpResponse(json.dumps(rl), content_type='application/json')
-
-def region_count2(request):
-    region_counting = RegionCount2.objects.all()             
     rl_str = serializers.serialize("json", region_counting)
     rl = json.loads(rl_str)
     print(rl)
@@ -253,8 +222,21 @@ def ecological_detec(request):
 
 @csrf_exempt
 def post(request):
-    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
+    data = json.loads(request.body)
+    #data=[{'id': '10001', 'factor name': 'roaddensity', 'factor kind': 'X', 'weight': '20'}, {'id': '10002', 'factor name': 'popudensity', 'factor kind': 'X', 'weight': '20'}, {'id': '10003', 'factor name': 'clusterdegree', 'factor kind': 'X', 'weight': '20'}, {'id': '10004', 'factor name': 'elevationmean', 'factor kind': 'X', 'weight': '20'}, {'id': '10005', 'factor name': 'elevationstandard', 'factor kind': 'X', 'weight': '20'}, {'function': 'equal_interval'}, {'hvalue': 5}]
 
+    method = data[1][0]['function']
+    classifiaction = data[2][0]['hvalue']
+    front=data[0]
+    factor = []
+    for j in range(0,len(front)):
+        factor.append(front[j]['factor name'])
+    calriskvalue(front,method,classifiaction)
+    return 
+
+@csrf_exempt
+def post2(request):
+    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
     data = json.loads(request.body)
     #data=[[{'id': 10001, 'name': 'roaddensity', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10002, 'name': 'popudensity', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10003, 'name': 'clusterdegree', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10004, 'name': 'elevationmean', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10005, 'name': 'elevationstandard', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10006, 'name': 'soilmiscibility', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10007, 'name': 'maxiareapropo', 'check': True, 'kind': 'x', 'Y': 0}, {'id': 10008, 'name': 'Y', 'check': True, 'kind': 'y', 'Y': 0}],[{'function': 'equal_interval'}, {'function': 'equal_interval'}],[{'hvalue': 5}, {'hvalue': 5}]]
 
@@ -291,49 +273,6 @@ def post(request):
     r5=r1+r2+r3+r4
 
     return HttpResponse(json.dumps(r5, ensure_ascii=False), content_type='application/json')
-
-@csrf_exempt
-def post2(request):
-    df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
-    data = json.loads(request.body)
-    # calriskvalue(data);
-
-    # data = [{'id': 10001, 'name': 'roaddensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10002, 'name': 'popudensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10003, 'name': 'clusterdegree', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10004, 'name': 'elevationmean', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10005, 'name': 'elevationstandard', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10006, 'name': 'soilmiscibility', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10007, 'name': 'maxiareapropo', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10008, 'name': 'Y', 'check': True, 'kind': 'x', 'Y': 0}]   
-    x=[]
-    for i in data:
-        if(i['kind'] == 'y'):
-            y=i['name']
-        elif(i['kind'] == 'x'):
-            x.append(i['name'])
-
-    all_df = naturalbreaks(df , 5 , x)
-    df1, df2 = interaction_detector(all_df, y, x, relationship=True)
-    result_df = df1
-    json_str = result_df.to_json(orient='records')
-    json_data = json.loads(json_str)
-
-    return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
-
-
-# @csrf_exempt
-# def post2(request):
-#     df = pd.DataFrame(list(Factor.objects.all().values('Y','name','roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo')))
-#     data = json.loads(request.body)
-#     # data = [{'id': 10001, 'name': 'roaddensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10002, 'name': 'popudensity', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10003, 'name': 'clusterdegree', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10004, 'name': 'elevationmean', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10005, 'name': 'elevationstandard', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10006, 'name': 'soilmiscibility', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10007, 'name': 'maxiareapropo', 'check': True, 'kind': 'y', 'Y': 0}, {'id': 10008, 'name': 'Y', 'check': True, 'kind': 'x', 'Y': 0}]   
-#     x=[]
-#     for i in data:
-#         if(i['kind'] == 'y'):
-#             y=i['name']
-#         elif(i['kind'] == 'x'):
-#             x.append(i['name'])
-
-#     all_df = naturalbreaks(df , 5 , x)
-#     df1, df2 = interaction_detector(all_df, y, x, relationship=True)
-#     result_df = df1
-#     json_str = result_df.to_json(orient='records')
-#     json_data = json.loads(json_str)
-
-#     return HttpResponse(json.dumps(json_data, ensure_ascii=False), content_type='application/json')
 
 
 
