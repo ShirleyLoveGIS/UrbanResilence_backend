@@ -19,7 +19,7 @@ conn = pymysql.connect(
 	host='localhost',
 )
 
-def calriskvalue(front):
+def calriskvalue(front,method, classifiaction):
     #front=[{"id":"10001","factor name":"roaddensity","factor kind":"X","weight":"20"},{"id":"10002","factor name":"popudensity","factor kind":"X","weight":"20"},{"id":"10003","factor name":"clusterdegree","factor kind":"X","weight":"20"},{"id":"10004","factor name":"elevationmean","factor kind":"X","weight":"20"},{"id":"10005","factor name":"elevationstandard","factor kind":"X","weight":"20"},{"id":"10006","factor name":"soilmiscibility","factor kind":"X","weight":"0"},{"id":"10007","factor name":"maxiareapropo","factor kind":"X","weight":"0"}]
         
     #前台获得权重数组
@@ -27,6 +27,15 @@ def calriskvalue(front):
     for i in range(0,len(front)):
         weight.append(int(front[i]['weight']))
     print(weight)
+
+    #获得因子名称及分类
+    x=[]
+    for i in front:
+        if(i['factor kind'] == 'Y'):
+            y=i['factor name']
+        elif(i['factor kind'] == 'X'):
+            x.append(i['factor name'])
+
     #获取城市名称数组
     city = []
     city_df = pd.read_sql('select city from factor group by city',con=conn)
@@ -36,14 +45,18 @@ def calriskvalue(front):
     length = len(city)
     #创建城市dataframe
     city_df = pd.DataFrame(index=range(length) , columns=['city','riskvalue'], dtype="float32")
-
     #计算各城市的q值
     for j in range(0,length):
         # 读取数据
         df = pd.read_sql('select * from `factor` where (`factor`.`city` = '+"'"+city[j]+"'"+')',con=conn)
         #因子探测器计算得到q值
-        all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
-        result_df=factor_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+        if(method == "equal_interval"):
+            all_df = equal_interval(df , classifiaction , x)
+        elif(method == "quantile"):
+            all_df = quantile(df , classifiaction , x)
+        elif(method == "naturalbreaks"):
+            all_df = naturalbreaks(df , classifiaction , x)
+        result_df=factor_detector(all_df, 'Y', x)
         #计算风险值
         risk_value = 0
         for i in range(0,len(front)):
