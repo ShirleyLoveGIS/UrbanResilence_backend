@@ -147,6 +147,13 @@ class RankingList(models.Model):
     class Meta:
          managed = False
          db_table = 'ranking_list'
+
+class RankingList2(models.Model):
+    city = models.CharField(db_column='city', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
+    CityCounts = models.IntegerField(db_column='CityCounts', blank=True, null=False)  # Field name made lowercase.
+    class Meta:
+         managed = False
+         db_table = 'ranking_list2'
       
 class Monthcountall(models.Model):
     month = models.CharField(db_column='month', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
