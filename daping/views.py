@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 import json
-from calculateriskvalue import calriskvalue
 import numpy as np
 import math
 import pandas as pd
@@ -15,6 +14,7 @@ from classifymethod import (
     quantile, 
     naturalbreaks
 )
+from calculateriskvalue import calriskvalue
 # Create your views here.
 from django.http import HttpResponse
 from collections import defaultdict
@@ -37,6 +37,7 @@ from .models import MonthCount
 from .models import Factor
 from .models import OriginalEvents
 from .models import RiskValue
+from .models import NewsList
 
 def index(request):
     
@@ -334,3 +335,11 @@ def risk_value(request):
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
+def news_list(request):
+    news_list = NewsList.objects.all()
+    rl_str = serializers.serialize("json", news_list)
+    print(rl_str)
+    rl = json.loads(rl_str)
+    print(rl)
+    
+    return HttpResponse(json.dumps(rl), content_type='application/json')

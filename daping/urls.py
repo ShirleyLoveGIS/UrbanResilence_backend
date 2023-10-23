@@ -37,8 +37,9 @@ urlpatterns = [
     path('interaction_rela', views.interaction_rela, name='interaction_rela'),
     path('ecological_detec', views.ecological_detec, name='ecological_detec'),
     path('original_events', views.original_events, name='original_events'),
-    path('risk_value', views.risk_value, name='risk_value')
-,
+    path('risk_value', views.risk_value, name='risk_value'),
+    # path('post', views.post, name='post'),
     path('post', views.post, name='post'),
-    path('post2', views.post2, name='post2')
+    path('post2', views.post2, name='post2'),
+    path('news_list', views.news_list , name='news_list')
 ]

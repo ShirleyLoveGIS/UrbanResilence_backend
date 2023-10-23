@@ -19,13 +19,18 @@ conn = pymysql.connect(
 	host='localhost',
 )
 
-def calriskvalue(front):
+def calriskvalue(front,method,n):
     #front=[{"id":"10001","factor name":"roaddensity","factor kind":"X","weight":"20"},{"id":"10002","factor name":"popudensity","factor kind":"X","weight":"20"},{"id":"10003","factor name":"clusterdegree","factor kind":"X","weight":"20"},{"id":"10004","factor name":"elevationmean","factor kind":"X","weight":"20"},{"id":"10005","factor name":"elevationstandard","factor kind":"X","weight":"20"},{"id":"10006","factor name":"soilmiscibility","factor kind":"X","weight":"0"},{"id":"10007","factor name":"maxiareapropo","factor kind":"X","weight":"0"}]
         
     #前台获得权重数组
     weight = []
     for i in range(0,len(front)):
         weight.append(int(front[i]['weight']))
+    print(weight)
+    #前台获得因子数组
+    factor = []
+    for j in range(0,len(front)):
+        factor.append(front[j]['factor name'])
     print(weight)
     #获取城市名称数组
     city = []
@@ -42,8 +47,13 @@ def calriskvalue(front):
         # 读取数据
         df = pd.read_sql('select * from `factor` where (`factor`.`city` = '+"'"+city[j]+"'"+')',con=conn)
         #因子探测器计算得到q值
-        all_df=naturalbreaks(df , 5 , ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
-        result_df=factor_detector(all_df, 'Y', ['roaddensity', 'popudensity', 'clusterdegree','elevationmean','elevationstandard','soilmiscibility','maxiareapropo'])
+        if(method == "equal_interval"):
+            all_df = equal_interval(df , n , factor)
+        elif(method == "quantile"):
+            all_df = quantile(df , n , factor)
+        elif(method == "naturalbreaks"):
+            all_df = naturalbreaks(df , n , factor)
+        result_df=factor_detector(all_df, 'Y', factor)
         #计算风险值
         risk_value = 0
         for i in range(0,len(front)):

@@ -106,6 +106,7 @@ def interaction_relationship(df):
                 outputRls = "Enhance, bi-"
 
             out_df.loc[factor2, factor1] = outputRls
+            out_df=out_df.replace(np.nan, '')
     return out_df
 
 

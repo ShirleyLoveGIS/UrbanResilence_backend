@@ -140,6 +140,7 @@ class OriginalEvents(models.Model):
     class Meta:
         managed = False
         db_table = 'original_events'
+ 
 
 class RankingList(models.Model):
     district = models.CharField(db_column='district', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
@@ -154,6 +155,13 @@ class RankingList2(models.Model):
     class Meta:
          managed = False
          db_table = 'ranking_list2'
+
+class RankingList3(models.Model):
+    city = models.CharField(db_column='city', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
+    CityCounts = models.IntegerField(db_column='CityCounts', blank=True, null=False)  # Field name made lowercase.
+    class Meta:
+         managed = False
+         db_table = 'ranking_list3'         
       
 class Monthcountall(models.Model):
     month = models.CharField(db_column='month', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
@@ -177,6 +185,14 @@ class RegionCount(models.Model):
     class Meta:
          managed = False
          db_table = 'region_count'
+
+class RegionCount2(models.Model):
+    city = models.CharField(db_column='地区', max_length=10,blank=True, primary_key =True)  # Field name made lowercase.
+    regioncounts = models.IntegerField(db_column='地面塌陷数', blank=True, null=True)   # Field name made lowercase.
+
+    class Meta:
+         managed = False
+         db_table = '2020china'         
 
 class EventsReason(models.Model):
     reason = models.CharField(db_column='Reason', max_length=50, blank=True, null=False, primary_key =True)  # Field name made lowercase.
@@ -230,3 +246,13 @@ class RiskValue(models.Model):
     class Meta:
         managed = False
         db_table = 'risk_value' 
+
+class NewsList(models.Model):       
+    newsdate = models.CharField(db_column='NewsDate', max_length=50 , blank=True)
+    city = models.CharField(db_column='City', max_length=10 , blank=True, null=True)
+    district = models.CharField(db_column='District', max_length=10 , blank=True, null=True)
+    address = models.CharField(db_column='Address', max_length=50 , blank=True,  primary_key=True)
+
+    class Meta:
+        managed = False
+        db_table = 'news_list' 
