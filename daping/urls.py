@@ -20,11 +20,16 @@ from . import views
 
 urlpatterns = [
     path('ranking_list', views.rank_list, name='ranking_list'),
+    path('ranking_list2', views.rank_list2, name='ranking_list2'),
+    path('ranking_list3', views.rank_list3, name='ranking_list3'),
+
     path('month_countall', views.month_countall, name='month_countall'),
     path('month_countavgm', views.month_countavgm, name='month_countavgm'),
     path('month_countavgy', views.month_countavgy, name='month_countavgy'),
     path('month_countly', views.month_countly, name='month_countly'),
     path('region_count', views.region_count, name='region_count'),
+    path('region_count2', views.region_count2, name='region_count2'),
+
     path('events_reason', views.events_reason, name='events_reason'),
     path('month_count', views.month_count, name='month_count'),
     path('getmonth', views.getmonth, name='getmonth'),

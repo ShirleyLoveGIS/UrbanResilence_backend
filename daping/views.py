@@ -4,6 +4,7 @@ import json
 import numpy as np
 import math
 import pandas as pd
+from spatial_autocorrelation import mainref
 from geodetector1 import (
     factor_detector, 
     interaction_detector, 
@@ -26,9 +27,12 @@ import sys
 print(sys.path)
 
 from .models import RankingList
+from .models import RankingList2
+from .models import RankingList3
 from .models import Monthcountall
 from .models import Monthcountly
 from .models import RegionCount
+from .models import RegionCount2
 from .models import EventsReason
 from .models import MonthCountavgm
 from .models import MonthCountavgy
@@ -66,6 +70,26 @@ def rank_list(request):
     
     return HttpResponse(json.dumps(rl), content_type='application/json')
 
+def rank_list2(request):
+    ranking_list = RankingList2.objects.all()
+    rl_str = serializers.serialize("json", ranking_list)
+    rl = json.loads(rl_str)
+    print(rl)   
+    #[{'model': 'daping.rankinglist', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.rankinglist', 'pk': '道里区', 'fields': {'count': 1}}]
+    
+    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+def rank_list3(request):
+    ranking_list = RankingList3.objects.all()
+    rl_str = serializers.serialize("json", ranking_list)
+    rl = json.loads(rl_str)
+    print(rl)   
+    #[{'model': 'daping.rankinglist', 'pk': '西湖区', 'fields': {'count': 2}}, {'model': 'daping.rankinglist', 'pk': '道里区', 'fields': {'count': 1}}]
+    
+    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+
+
 def month_countall(request):
     monthcountall = Monthcountall.objects.all()
     rl_str = serializers.serialize("json", monthcountall)
@@ -92,6 +116,17 @@ def region_count(request):
     print(rl)
 
     return HttpResponse(json.dumps(rl), content_type='application/json')
+
+def region_count2(request):
+    region_counting = RegionCount2.objects.all()             
+    rl_str = serializers.serialize("json", region_counting)
+    rl = json.loads(rl_str)
+    print(rl)
+
+    return HttpResponse(json.dumps(rl), content_type='application/json')
+
+
+
 
 def events_reason(request):
     events_reasoning = EventsReason.objects.all()
@@ -228,11 +263,8 @@ def post(request):
     method = data[1][0]['function']
     classifiaction = data[2][0]['hvalue']
     front=data[0]
-    factor = []
-    for j in range(0,len(front)):
-        factor.append(front[j]['factor name'])
     calriskvalue(front,method,classifiaction)
-    return 
+    return data
 
 @csrf_exempt
 def post2(request):
@@ -261,6 +293,7 @@ def post2(request):
     result_df2 = df2
     result_df3=factor_detector(all_df, y, x)
     result_df4=ecological_detector(all_df, y, x)
+    result_df5=mainref(all_df, y, x)
     r1_str = result_df1.to_json(orient='records')
     r1 = json.loads(r1_str)
     r2_str = result_df2.to_json(orient='records')

@@ -140,6 +140,8 @@ class OriginalEvents(models.Model):
     class Meta:
         managed = False
         db_table = 'original_events'
+
+
  
 
 class RankingList(models.Model):
@@ -162,6 +164,15 @@ class RankingList3(models.Model):
     class Meta:
          managed = False
          db_table = 'ranking_list3'         
+
+class RegionCount2(models.Model):
+    city = models.CharField(db_column='地区', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
+    CityCounts = models.IntegerField(db_column='地面塌陷数', blank=True, null=False)  # Field name made lowercase.
+    class Meta:
+         managed = False
+         db_table = '2020china'           
+
+
       
 class Monthcountall(models.Model):
     month = models.CharField(db_column='month', max_length=10, blank=True, primary_key =True)  # Field name made lowercase.
@@ -186,13 +197,7 @@ class RegionCount(models.Model):
          managed = False
          db_table = 'region_count'
 
-class RegionCount2(models.Model):
-    city = models.CharField(db_column='地区', max_length=10,blank=True, primary_key =True)  # Field name made lowercase.
-    regioncounts = models.IntegerField(db_column='地面塌陷数', blank=True, null=True)   # Field name made lowercase.
-
-    class Meta:
-         managed = False
-         db_table = '2020china'         
+   
 
 class EventsReason(models.Model):
     reason = models.CharField(db_column='Reason', max_length=50, blank=True, null=False, primary_key =True)  # Field name made lowercase.
